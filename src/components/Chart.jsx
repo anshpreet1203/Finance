@@ -6,8 +6,14 @@ const Chart = ({ sortTransactions }) => {
     return { date: item.date, amount: item.amount };
   });
 
-  const pieData = sortTransactions.filter((transaction) => {
+  const ExpData = sortTransactions.filter((transaction) => {
     if (transaction.type == "expense") {
+      return { tag: transaction.tag, amount: transaction.amount };
+    }
+  });
+
+  const IncData = sortTransactions.filter((transaction) => {
+    if (transaction.type == "income") {
       return { tag: transaction.tag, amount: transaction.amount };
     }
   });
@@ -21,7 +27,15 @@ const Chart = ({ sortTransactions }) => {
   };
 
   const pieConfig = {
-    data: pieData,
+    data: ExpData,
+    width: 800,
+    height: 400,
+    angleField: "amount",
+    colorField: "tag",
+  };
+
+  const incConfig = {
+    data: IncData,
     width: 800,
     height: 400,
     angleField: "amount",
@@ -29,15 +43,22 @@ const Chart = ({ sortTransactions }) => {
   };
   return (
     <>
-      <div className="flex justify-center gap-16 my-8">
-        <div className="shadow-custom">
-          <h2 className="p-4 text-2xl">Financial Statistics</h2>
-          <Line {...config} />;
+      <div className="flex flex-col justify-center items-center gap-10 my-8">
+        <div className="flex gap-16">
+          <div className="shadow-custom">
+            <h2 className="p-4 text-2xl">Spending Data</h2>
+            <Pie {...pieConfig} />
+          </div>
+
+          <div className="shadow-custom w-[50%]">
+            <h2 className="p-4 text-2xl">Income Data</h2>
+            <Pie {...incConfig} className="w-[80%]" />
+          </div>
         </div>
 
         <div className="shadow-custom">
-          <h2 className="p-4 text-2xl">Spending Data</h2>
-          <Pie {...pieConfig} />
+          <h2 className="p-4 text-2xl">Financial Statistics</h2>
+          <Line {...config} />;
         </div>
       </div>
     </>
